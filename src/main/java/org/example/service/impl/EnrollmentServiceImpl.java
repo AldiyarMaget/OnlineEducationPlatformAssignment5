@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import org.example.domain.course.AbstractCourse;
 import org.example.domain.course.Course;
 import org.example.domain.enrollment.Certificate;
 import org.example.domain.enrollment.Enrollment;
@@ -15,6 +16,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final StudentRepository studentRepo;
     private final CourseRepository courseRepo;
     private final CourseMetadataRepository metaRepo;
+    private final CertificateRepository certRepo;
     private final EnrollmentRepository enrollmentRepo;
     private final MentorService mentorService;
     private final GamificationService gamificationService;
@@ -26,6 +28,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             StudentRepository studentRepo,
             CourseRepository courseRepo,
             CourseMetadataRepository metaRepo,
+            CertificateRepository certRepo,
             EnrollmentRepository enrollmentRepo,
             MentorService mentorService,
             GamificationService gamificationService,
@@ -35,6 +38,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         this.studentRepo = studentRepo;
         this.courseRepo = courseRepo;
         this.metaRepo = metaRepo;
+        this.certRepo = certRepo;
         this.enrollmentRepo = enrollmentRepo;
         this.mentorService = mentorService;
         this.gamificationService = gamificationService;
@@ -106,7 +110,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             notificationService.notifyAdmin("runtimeCourse.deliverContent failed for " + sId + "/" + courseId + " : " + ex.getMessage());
         }
 
-        Optional<org.example.domain.course.CourseBase> courseBaseOpt = courseRepo.findBaseCourse(courseId);
+        Optional<AbstractCourse> courseBaseOpt = courseRepo.findBaseCourse(courseId);
         if (courseBaseOpt.isPresent() && newCompleted >= courseBaseOpt.get().getTotalModules()) {
             Enrollment latest = enrollmentRepo.findByStudentAndCourse(sId, courseId).orElseThrow();
             boolean statusUpdated = enrollmentRepo.updateStatusIfVersionMatches(sId, courseId, "COMPLETED", latest.getVersion());
@@ -124,7 +128,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 notificationService.notifyAdmin("runtimeCourse.onComplete failed for " + sId + "/" + courseId + " : " + ex.getMessage());
             }
             try {
-                Optional<org.example.domain.enrollment.Certificate> certOpt = enrollmentRepo.findCertificate(sId, courseId);
+                Optional<org.example.domain.enrollment.Certificate> certOpt = certRepo.findCertificate(sId, courseId);
                 if (certOpt.isPresent()) {
                     enrollmentRepo.setCertificateId(sId, courseId, certOpt.get().getId());
                     notificationService.notifyStudent(studentId, "Course completed. Certificate: " + certOpt.get().getUrl());
@@ -150,10 +154,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         if (!updated) {
             notificationService.notifyAdmin("Optimistic lock failed when forcing COMPLETED for " + sId + "/" + courseId);
         }
-        if (enrollmentRepo.findCertificate(sId, courseId).isEmpty()) {
+        if (certRepo.findCertificate(sId, courseId).isEmpty()) {
             Certificate cert = certificateService.issueCertificate(sId, courseId);
             try {
-                enrollmentRepo.saveCertificate(cert);
+                certRepo.save(cert);
             } catch (AbstractMethodError | NoSuchMethodError ignored) { }
             notificationService.notifyStudent(studentId, "Certificate issued: " + cert.getUrl());
         }

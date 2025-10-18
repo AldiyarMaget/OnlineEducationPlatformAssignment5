@@ -67,7 +67,7 @@ public class ConsoleApp {
         DefaultCourseFactory localFactory = new DefaultCourseFactory(courseRepo, metaRepo, localMentorService, gamService, certificateService);
 
         this.enrollmentService = new EnrollmentServiceImpl(
-                studentRepo, courseRepo, metaRepo, enrollmentRepo,
+                studentRepo, courseRepo, metaRepo,certRepo, enrollmentRepo,
                 localMentorService, gamService, certificateService, notificationService, localFactory
         );
 
@@ -75,7 +75,7 @@ public class ConsoleApp {
     }
 
     public void run() {
-        System.out.println("Welcome to Console LMS. Type number for action. (DB-driven)");
+        System.out.println("Welcome to Console LMS. Type number for action");
         while (true) {
             printMenu();
             String s = scanner.nextLine().trim();

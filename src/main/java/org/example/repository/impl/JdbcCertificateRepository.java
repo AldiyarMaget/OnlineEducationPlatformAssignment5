@@ -47,4 +47,23 @@ public class JdbcCertificateRepository implements CertificateRepository {
             }
         } catch (SQLException ex) { throw new RuntimeException(ex); }
     }
+
+    @Override
+    public Optional<Certificate> findCertificate(UUID studentId, String courseId) {
+        String sql = "SELECT id, student_id, course_id, issued_at, url FROM certificates WHERE student_id = ? AND course_id = ?";
+        try (Connection c = ds.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setObject(1, studentId); ps.setString(2, courseId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) return Optional.empty();
+                UUID id = (UUID) rs.getObject("id");
+                UUID sid = (UUID) rs.getObject("student_id");
+                String cid = rs.getString("course_id");
+                Timestamp ts = rs.getTimestamp("issued_at");
+                OffsetDateTime issuedAt = ts == null ? null : ts.toInstant().atOffset(java.time.ZoneOffset.UTC);
+                String url = rs.getString("url");
+                return Optional.of(new Certificate(id, sid, cid, issuedAt, url));
+            }
+        } catch (SQLException ex) { throw new RuntimeException(ex); }
+    }
 }

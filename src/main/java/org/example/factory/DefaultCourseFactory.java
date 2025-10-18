@@ -26,18 +26,16 @@ public class DefaultCourseFactory implements CourseFactory {
         this.mentorService = mentorService;
         this.gamificationService = gamificationService;
         this.certificateService = certificateService;
+
+        org.example.factory.CourseRegistry.register("MATH", org.example.domain.course.MathCourse::new);
+        org.example.factory.CourseRegistry.register("PROGRAMMING", org.example.domain.course.ProgrammingCourse::new);
     }
+
 
     @Override
     public Course createCourse(String courseId) {
-        Optional<CourseBase> baseOpt = courseRepo.findBaseCourse(courseId);
-        if (baseOpt.isEmpty()) throw new IllegalArgumentException("Course not found: " + courseId);
-        CourseBase base = baseOpt.get();
-        switch (base.getType()) {
-            case "MATH": return new MathCourse(base.getId(), base.getTitle(), base.getTotalModules());
-            case "PROGRAMMING": return new ProgrammingCourse(base.getId(), base.getTitle(), base.getTotalModules());
-            default: return new MathCourse(base.getId(), base.getTitle(), base.getTotalModules());
-        }
+        Optional<AbstractCourse> baseOpt = courseRepo.findBaseCourse(courseId);
+        return baseOpt.orElseThrow(() -> new IllegalArgumentException("Course not found: " + courseId));
     }
 
     @Override

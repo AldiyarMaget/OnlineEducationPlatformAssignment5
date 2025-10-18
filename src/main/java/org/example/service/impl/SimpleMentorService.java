@@ -21,7 +21,7 @@ public class SimpleMentorService implements MentorService {
     public UUID assignMentor(UUID studentId, String courseId) {
         String skill = courseIdToSkill(courseId);
 
-        Optional<Mentor> mOpt = mentorRepo.findById(skill);
+        Optional<Mentor> mOpt = mentorRepo.findTopBySkill(skill);
         if (mOpt.isEmpty()) return null;
 
         UUID mentorId = mOpt.get().getId();

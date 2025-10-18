@@ -7,20 +7,20 @@ public abstract class AbstractCourse implements Course {
     private final String title;
     private final int totalModules;
 
-    public AbstractCourse(String id, String title, int totalModules) {
+    protected AbstractCourse(String id, String title, int totalModules) {
         this.id = id;
         this.title = title;
         this.totalModules = totalModules;
     }
 
     @Override
-    public String getId() { return id; }
+    public final String getId() { return id; }
 
     @Override
-    public String getTitle() { return title; }
+    public final String getTitle() { return title; }
 
     @Override
-    public int getTotalModules() { return totalModules; }
+    public final int getTotalModules() { return totalModules; }
 
     @Override
     public void onEnroll(Student student) {

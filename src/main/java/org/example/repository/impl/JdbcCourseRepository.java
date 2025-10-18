@@ -1,6 +1,7 @@
 package org.example.repository.impl;
 
-import org.example.domain.course.CourseBase;
+import org.example.domain.course.AbstractCourse;
+import org.example.factory.CourseRegistry;
 import org.example.repository.CourseRepository;
 
 import javax.sql.DataSource;
@@ -12,20 +13,25 @@ public class JdbcCourseRepository implements CourseRepository {
     public JdbcCourseRepository(DataSource ds){ this.ds = ds; }
 
     @Override
-    public Optional<CourseBase> findBaseCourse(String courseId) {
+    public Optional<AbstractCourse> findBaseCourse(String courseId) {
         String sql = "SELECT id, title, type, total_modules FROM courses WHERE id = ?";
         try (Connection c = ds.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, courseId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) return Optional.empty();
-                return Optional.of(new CourseBase(
-                        rs.getString("id"),
-                        rs.getString("title"),
-                        rs.getString("type"),
-                        rs.getInt("total_modules")
-                ));
+                String id = rs.getString("id");
+                String title = rs.getString("title");
+                String type = rs.getString("type");
+                int totalModules = rs.getInt("total_modules");
+
+                // Create runtime object directly
+                AbstractCourse course = CourseRegistry.create(type, id, title, totalModules);
+                return Optional.of(course);
             }
-        } catch (SQLException ex) { throw new RuntimeException(ex); }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
+
 }

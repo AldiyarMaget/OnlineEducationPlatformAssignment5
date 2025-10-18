@@ -5,10 +5,10 @@ import org.example.domain.user.Student;
 public interface Course {
     String getId();
     String getTitle();
-    int getTotalModules(); // количество модулей/уроков
+    int getTotalModules();
     void onEnroll(Student student);
     void onStart(Student student);
-    void deliverContent(Student student); // один модуль
+    void deliverContent(Student student);
     void onComplete(Student student);
 }
 

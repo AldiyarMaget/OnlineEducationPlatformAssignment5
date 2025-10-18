@@ -30,13 +30,13 @@ public class JdbcStudentRepository implements StudentRepository {
     }
 
     @Override
-    public boolean save(Student s) {
+    public boolean save(Student u) {
         String sql = "INSERT INTO students(id, name, email) VALUES (?, ?, ?) ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, email = EXCLUDED.email";
         try (Connection c = ds.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setObject(1, s.getId());
-            ps.setString(2, s.getName());
-            ps.setString(3, s.getEmail());
+            ps.setObject(1, u.getId());
+            ps.setString(2, u.getName());
+            ps.setString(3, u.getEmail());
             return ps.executeUpdate() >= 1;
         } catch (SQLException ex) { throw new RuntimeException(ex); }
     }

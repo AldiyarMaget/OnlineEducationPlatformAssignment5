@@ -13,6 +13,4 @@ public interface EnrollmentRepository {
     boolean setCertificateId(UUID studentId, String courseId, UUID certificateId);
     boolean updateStatusIfVersionMatches(UUID studentId, String courseId, String newStatus, int expectedVersion);
     boolean setMentorId(UUID studentId, String courseId, UUID mentorId);
-    Certificate saveCertificate(Certificate c);
-    Optional<Certificate> findCertificate(UUID studentId, String courseId);
 }
