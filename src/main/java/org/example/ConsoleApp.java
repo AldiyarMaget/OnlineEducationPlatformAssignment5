@@ -26,6 +26,7 @@ public class ConsoleApp {
     private final MentorRepository mentorRepo;
     private final EnrollmentRepository enrollmentRepo;
     private final CertificateRepository certRepo;
+    private final GamificationRepository gamiRepo;
 
     private final GamificationService gamService;
     private final CertificateService certificateService;
@@ -35,9 +36,9 @@ public class ConsoleApp {
 
     private final Scanner scanner = new Scanner(System.in);
 
-    public ConsoleApp(String jdbcUrl, String user, String password) {
+    public ConsoleApp(String address, String user, String password) {
         PGSimpleDataSource dsLocal = new PGSimpleDataSource();
-        dsLocal.setUrl(jdbcUrl);
+        dsLocal.setUrl(address);
         dsLocal.setUser(user);
         dsLocal.setPassword(password);
         this.ds = dsLocal;
@@ -48,11 +49,11 @@ public class ConsoleApp {
         this.mentorRepo = new JdbcMentorRepository(ds);
         this.enrollmentRepo = new JdbcEnrollmentRepository(ds);
         this.certRepo = new JdbcCertificateRepository(ds);
+        this.gamiRepo = new JdbcGamificationRepository(ds);
 
-        GamificationRepository localGamRepo = new JdbcGamificationRepository(ds);
         MentorService localMentorService = new SimpleMentorService(mentorRepo, enrollmentRepo);
 
-        this.gamService = new SimpleGamificationService(localGamRepo);
+        this.gamService = new SimpleGamificationService(gamiRepo);
         this.certificateService = new SimpleCertificateService(certRepo);
 
         this.notificationService = new NotificationService() {
@@ -133,7 +134,7 @@ public class ConsoleApp {
     }
 
     private void listCourses() {
-        System.out.println("Available courses (reading directly from DB):");
+        System.out.println("Available courses:");
         String sql = "SELECT id, title, type, total_modules FROM courses ORDER BY id";
         try (Connection c = ds.getConnection();
              PreparedStatement ps = c.prepareStatement(sql);

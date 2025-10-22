@@ -11,7 +11,9 @@ import java.util.UUID;
 
 public class JdbcGamificationRepository implements GamificationRepository {
     private final DataSource ds;
-    public JdbcGamificationRepository(DataSource ds){ this.ds = ds; }
+    public JdbcGamificationRepository(DataSource ds){
+        this.ds = ds;
+    }
 
     @Override
     public void addPoints(UUID studentId, String courseId, int points) {

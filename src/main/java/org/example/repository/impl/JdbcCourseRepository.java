@@ -25,7 +25,6 @@ public class JdbcCourseRepository implements CourseRepository {
                 String type = rs.getString("type");
                 int totalModules = rs.getInt("total_modules");
 
-                // Create runtime object directly
                 AbstractCourse course = CourseRegistry.create(type, id, title, totalModules);
                 return Optional.of(course);
             }
