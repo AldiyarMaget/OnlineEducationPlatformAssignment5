@@ -64,8 +64,13 @@ public class ConsoleApp {
                 System.err.println("[admin] " + message);
             }
         };
-
-        DefaultCourseFactory localFactory = new DefaultCourseFactory(courseRepo, metaRepo, localMentorService, gamService, certificateService);
+        DefaultCourseFactory localFactory = new DefaultCourseFactory.FactoryBuilder()
+                .courseRepo(courseRepo)
+                .metaRepo(metaRepo)
+                .mentorService(localMentorService)
+                .gamificationService(gamService)
+                .certificateService(certificateService)
+                .build();
 
         this.enrollmentService = new EnrollmentServiceImpl(
                 studentRepo, courseRepo, metaRepo,certRepo, enrollmentRepo,

@@ -54,7 +54,17 @@ public class JdbcEnrollmentRepository implements EnrollmentRepository {
         boolean useMentor = rs.getBoolean("use_mentor");
         boolean useGamification = rs.getBoolean("use_gamification");
         boolean useCertificate = rs.getBoolean("use_certificate");
-        return new Enrollment(sid, cid, status, completed, mentorId, certId, version, useMentor, useGamification, useCertificate);
+        return new Enrollment.EnrollmentBuilder()
+                .studentId(sid)
+                .courseId(cid)
+                .status(status)
+                .completedModules(completed)
+                .certificateId(certId)
+                .version(version)
+                .useMentor(useMentor)
+                .useGamification(useGamification)
+                .useCertificate(useCertificate)
+                .build();
     }
 
     @Override

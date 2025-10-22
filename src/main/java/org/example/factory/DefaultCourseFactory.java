@@ -16,16 +16,12 @@ public class DefaultCourseFactory implements CourseFactory {
     private final GamificationService gamificationService;
     private final CertificateService certificateService;
 
-    public DefaultCourseFactory(CourseRepository courseRepo,
-                                CourseMetadataRepository metaRepo,
-                                MentorService mentorService,
-                                GamificationService gamificationService,
-                                CertificateService certificateService) {
-        this.courseRepo = courseRepo;
-        this.metaRepo = metaRepo;
-        this.mentorService = mentorService;
-        this.gamificationService = gamificationService;
-        this.certificateService = certificateService;
+    public DefaultCourseFactory(FactoryBuilder builder) {
+        this.courseRepo = builder.courseRepo;
+        this.metaRepo = builder.metaRepo;
+        this.mentorService = builder.mentorService;
+        this.gamificationService = builder.gamificationService;
+        this.certificateService = builder.certificateService;
 
         org.example.factory.CourseRegistry.register("MATH", org.example.domain.course.MathCourse::new);
         org.example.factory.CourseRegistry.register("PROGRAMMING", org.example.domain.course.ProgrammingCourse::new);
@@ -59,5 +55,41 @@ public class DefaultCourseFactory implements CourseFactory {
             c = new GamificationDecorator(c, gamificationService, pointsPerModule);
         }
         return c;
+    }
+    public static class FactoryBuilder {
+        private CourseRepository courseRepo;
+        private CourseMetadataRepository metaRepo;
+        private MentorService mentorService;
+        private GamificationService gamificationService;
+        private CertificateService certificateService;
+
+        public FactoryBuilder courseRepo(CourseRepository courseRepo) {
+            this.courseRepo = courseRepo;
+            return this;
+        }
+
+        public FactoryBuilder metaRepo(CourseMetadataRepository metaRepo) {
+            this.metaRepo = metaRepo;
+            return this;
+        }
+
+        public FactoryBuilder mentorService(MentorService mentorService) {
+            this.mentorService = mentorService;
+            return this;
+        }
+        public FactoryBuilder gamificationService(GamificationService gamificationService) {
+            this.gamificationService = gamificationService;
+            return this;
+        }
+
+        public FactoryBuilder certificateService(CertificateService certificateService) {
+            this.certificateService = certificateService;
+            return this;
+        }
+        public DefaultCourseFactory build() {
+            return new DefaultCourseFactory(this);
+        }
+
+
     }
 }

@@ -1,0 +1,75 @@
+Структура папок
+Серийный номер тома: 3289-11C7
+C:.
+|   структура.txt
+|   
++---java
+|   \---org
+|       \---example
+|           |   AppLauncher.java
+|           |   ConsoleApp.java
+|           |   
+|           +---domain
+|           |   +---course
+|           |   |       AbstractCourse.java
+|           |   |       CertificateDecorator.java
+|           |   |       Course.java
+|           |   |       CourseBase.java
+|           |   |       CourseDecorator.java
+|           |   |       CourseMetadata.java
+|           |   |       GamificationDecorator.java
+|           |   |       MathCourse.java
+|           |   |       MentorSupportDecorator.java
+|           |   |       ProgrammingCourse.java
+|           |   |       
+|           |   +---enrollment
+|           |   |       Certificate.java
+|           |   |       Enrollment.java
+|           |   |       LeaderboardEntry.java
+|           |   |       
+|           |   \---user
+|           |           Mentor.java
+|           |           Student.java
+|           |           
+|           +---facade
+|           |       StudentPortalFacade.java
+|           |       
+|           +---factory
+|           |       CourseFactory.java
+|           |       DefaultCourseFactory.java
+|           |       
+|           +---repository
+|           |   |   CertificateRepository.java
+|           |   |   CourseMetadataRepository.java
+|           |   |   CourseRepository.java
+|           |   |   EnrollmentRepository.java
+|           |   |   GamificationRepository.java
+|           |   |   MentorRepository.java
+|           |   |   StudentRepository.java
+|           |   |   
+|           |   \---impl
+|           |           JdbcCertificateRepository.java
+|           |           JdbcCourseMetadataRepository.java
+|           |           JdbcCourseRepository.java
+|           |           JdbcEnrollmentRepository.java
+|           |           JdbcGamificationRepository.java
+|           |           JdbcMentorRepository.java
+|           |           JdbcStudentRepository.java
+|           |           
+|           \---service
+|               |   CertificateService.java
+|               |   EnrollmentService.java
+|               |   GamificationService.java
+|               |   MentorService.java
+|               |   NotificationService.java
+|               |   
+|               \---impl
+|                       EnrollmentServiceImpl.java
+|                       SimpleCertificateService.java
+|                       SimpleGamificationService.java
+|                       SimpleMentorService.java
+|                       
+\---resources
+    \---sql
+            V0001__init.sql
+            

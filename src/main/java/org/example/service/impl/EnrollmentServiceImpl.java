@@ -51,8 +51,16 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public boolean enroll(String studentId, String courseId, boolean useMentor, boolean useGamification, boolean useCertificate) {
         UUID sId = UUID.fromString(studentId);
         if (studentRepo.findById(sId).isEmpty()) throw new RuntimeException("Student not found");
-
-        Enrollment e = new Enrollment(sId, courseId, "ENROLLED", 0, null, null, 0, useMentor, useGamification, useCertificate);
+        Enrollment e = new Enrollment.EnrollmentBuilder()
+                .studentId(sId)
+                .courseId(courseId)
+                .status("ENROLLED")
+                .completedModules(0)
+                .version(0)
+                .useMentor(useMentor)
+                .useGamification(useGamification)
+                .useCertificate(useCertificate)
+                .build();
         boolean created = enrollmentRepo.create(e);
 
 

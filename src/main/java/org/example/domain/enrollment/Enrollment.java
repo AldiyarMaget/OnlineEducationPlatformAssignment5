@@ -14,19 +14,17 @@ public class Enrollment {
     private final boolean useGamification;
     private final boolean useCertificate;
 
-    public Enrollment(UUID studentId, String courseId, String status, int completedModules,
-                      UUID mentorId, UUID certificateId, int version,
-                      boolean useMentor, boolean useGamification, boolean useCertificate) {
-        this.studentId = studentId;
-        this.courseId = courseId;
-        this.status = status;
-        this.completedModules = completedModules;
-        this.mentorId = mentorId;
-        this.certificateId = certificateId;
-        this.version = version;
-        this.useMentor = useMentor;
-        this.useGamification = useGamification;
-        this.useCertificate = useCertificate;
+    public Enrollment(EnrollmentBuilder builder) {
+        this.studentId = builder.studentId;
+        this.courseId = builder.courseId;
+        this.status = builder.status;
+        this.completedModules = builder.completedModules;
+        this.mentorId = builder.mentorId;
+        this.certificateId = builder.certificateId;
+        this.version = builder.version;
+        this.useMentor = builder.useMentor;
+        this.useGamification = builder.useGamification;
+        this.useCertificate = builder.useCertificate;
     }
 
     public UUID getStudentId() { return studentId; }
@@ -39,4 +37,62 @@ public class Enrollment {
     public boolean isUseMentor() { return useMentor; }
     public boolean isUseGamification() { return useGamification; }
     public boolean isUseCertificate() { return useCertificate; }
+
+    public static class EnrollmentBuilder{
+        private UUID studentId;
+        private String courseId;
+        private String status;
+        private int completedModules;
+        private UUID mentorId;
+        private UUID certificateId;
+        private int version;
+        private boolean useMentor;
+        private boolean useGamification;
+        private boolean useCertificate;
+
+        public EnrollmentBuilder studentId(UUID studentId) {
+            this.studentId = studentId;
+            return this;
+        }
+        public EnrollmentBuilder courseId(String courseId) {
+            this.courseId = courseId;
+            return this;
+        }
+        public EnrollmentBuilder status(String status) {
+            this.status = status;
+            return this;
+        }
+        public EnrollmentBuilder completedModules(int completedModules) {
+            this.completedModules = completedModules;
+            return this;
+        }
+        public EnrollmentBuilder mentorId(UUID mentorId) {
+            this.mentorId = mentorId;
+            return this;
+        }
+        public EnrollmentBuilder certificateId(UUID certificateId) {
+            this.certificateId = certificateId;
+            return this;
+        }
+        public EnrollmentBuilder version(int version) {
+            this.version = version;
+            return this;
+        }
+        public EnrollmentBuilder useMentor(boolean useMentor) {
+            this.useMentor = useMentor;
+            return this;
+        }
+        public EnrollmentBuilder useGamification(boolean useGamification) {
+            this.useGamification = useGamification;
+            return this;
+        }
+        public EnrollmentBuilder useCertificate(boolean useCertificate) {
+            this.useCertificate = useCertificate;
+            return this;
+        }
+        public Enrollment build() {
+            return new Enrollment(this);
+        }
+
+    }
 }
