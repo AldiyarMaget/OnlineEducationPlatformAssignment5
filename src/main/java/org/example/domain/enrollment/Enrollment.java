@@ -14,7 +14,7 @@ public class Enrollment {
     private final boolean useGamification;
     private final boolean useCertificate;
 
-    public Enrollment(EnrollmentBuilder builder) {
+    private Enrollment(EnrollmentBuilder builder) {
         this.studentId = builder.studentId;
         this.courseId = builder.courseId;
         this.status = builder.status;

@@ -2,6 +2,6 @@ package org.example;
 
 public class AppLauncher {
     public static void main(String[] args) {
-        DBLauncher.run();
+        DBRunner.run();
     }
 }

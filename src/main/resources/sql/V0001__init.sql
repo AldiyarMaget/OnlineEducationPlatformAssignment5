@@ -1,1 +1,1 @@
-SELECT * FROM students
+DELETE FROM enrollments where name = 'SELECT name FROM students WHERE id = ?'

@@ -16,7 +16,7 @@ public class DefaultCourseFactory implements CourseFactory {
     private final GamificationService gamificationService;
     private final CertificateService certificateService;
 
-    public DefaultCourseFactory(FactoryBuilder builder) {
+    private DefaultCourseFactory(FactoryBuilder builder) {
         this.courseRepo = builder.courseRepo;
         this.metaRepo = builder.metaRepo;
         this.mentorService = builder.mentorService;

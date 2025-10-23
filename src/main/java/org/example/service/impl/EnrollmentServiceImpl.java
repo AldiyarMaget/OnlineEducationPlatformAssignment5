@@ -24,27 +24,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final NotificationService notificationService;
     private final CourseFactory courseFactory;
 
-    public EnrollmentServiceImpl(
-            StudentRepository studentRepo,
-            CourseRepository courseRepo,
-            CourseMetadataRepository metaRepo,
-            CertificateRepository certRepo,
-            EnrollmentRepository enrollmentRepo,
-            MentorService mentorService,
-            GamificationService gamificationService,
-            CertificateService certificateService,
-            NotificationService notificationService,
-            CourseFactory courseFactory) {
-        this.studentRepo = studentRepo;
-        this.courseRepo = courseRepo;
-        this.metaRepo = metaRepo;
-        this.certRepo = certRepo;
-        this.enrollmentRepo = enrollmentRepo;
-        this.mentorService = mentorService;
-        this.gamificationService = gamificationService;
-        this.certificateService = certificateService;
-        this.notificationService = notificationService;
-        this.courseFactory = courseFactory;
+    private EnrollmentServiceImpl(EnrollmentServiceImplBuilder builder) {
+        this.studentRepo = builder.studentRepo;
+        this.courseRepo = builder.courseRepo;
+        this.metaRepo = builder.metaRepo;
+        this.certRepo = builder.certRepo;
+        this.enrollmentRepo = builder.enrollmentRepo;
+        this.mentorService = builder.mentorService;
+        this.gamificationService = builder.gamificationService;
+        this.certificateService = builder.certificateService;
+        this.notificationService = builder.notificationService;
+        this.courseFactory = builder.courseFactory;
     }
 
     @Override
@@ -170,5 +160,62 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             notificationService.notifyStudent(studentId, "Certificate issued: " + cert.getUrl());
         }
         return true;
+    }
+
+    public static class EnrollmentServiceImplBuilder {
+        private StudentRepository studentRepo;
+        private CourseRepository courseRepo;
+        private CourseMetadataRepository metaRepo;
+        private CertificateRepository certRepo;
+        private EnrollmentRepository enrollmentRepo;
+        private MentorService mentorService;
+        private GamificationService gamificationService;
+        private CertificateService certificateService;
+        private NotificationService notificationService;
+        private CourseFactory courseFactory;
+
+        public EnrollmentServiceImplBuilder studentRepo(StudentRepository studentRepo) {
+            this.studentRepo = studentRepo;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder courseRepo(CourseRepository courseRepo) {
+            this.courseRepo = courseRepo;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder metaRepo(CourseMetadataRepository metaRepo) {
+            this.metaRepo = metaRepo;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder certRepo(CertificateRepository certRepo) {
+            this.certRepo = certRepo;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder enrollmentRepo(EnrollmentRepository enrollRepo) {
+            this.enrollmentRepo = enrollRepo;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder mentorService(MentorService mentorService) {
+            this.mentorService = mentorService;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder gamificationService(GamificationService gamificationService) {
+            this.gamificationService = gamificationService;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder certificateService(CertificateService certificateService) {
+            this.certificateService = certificateService;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder notificationService(NotificationService notificationService) {
+            this.notificationService = notificationService;
+            return this;
+        }
+        public EnrollmentServiceImplBuilder courseFactory(CourseFactory courseFactory) {
+            this.courseFactory = courseFactory;
+            return this;
+        }
+        public EnrollmentServiceImpl build() {
+            return new EnrollmentServiceImpl(this);
+        }
     }
 }

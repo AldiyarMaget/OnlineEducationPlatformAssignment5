@@ -71,17 +71,23 @@ public class ConsoleApp {
                 .gamificationService(gamService)
                 .certificateService(certificateService)
                 .build();
-
-        this.enrollmentService = new EnrollmentServiceImpl(
-                studentRepo, courseRepo, metaRepo,certRepo, enrollmentRepo,
-                localMentorService, gamService, certificateService, notificationService, localFactory
-        );
-
+        this.enrollmentService = new EnrollmentServiceImpl.EnrollmentServiceImplBuilder()
+                .studentRepo(studentRepo)
+                .courseRepo(courseRepo)
+                .metaRepo(metaRepo)
+                .certRepo(certRepo)
+                .enrollmentRepo(enrollmentRepo)
+                .mentorService(localMentorService)
+                .gamificationService(gamService)
+                .certificateService(certificateService)
+                .notificationService(notificationService)
+                .courseFactory(localFactory)
+                .build();
         this.facade = new StudentPortalFacade(enrollmentService);
     }
 
     public void run() {
-        System.out.println("Welcome to Console LMS. Type number for action");
+        System.out.println("Welcome to Console Khan-LMS. Type number for action");
         while (true) {
             printMenu();
             String s = scanner.nextLine().trim();
@@ -159,7 +165,7 @@ public class ConsoleApp {
 
     private void enrollStudent() {
         try {
-            System.out.print("Enter your student id (or type 'list' to see students): ");
+            System.out.print("Enter student id (or write 'list' to see students): ");
             String sidInput = scanner.nextLine().trim();
             if (sidInput.equalsIgnoreCase("list")) {
                 listStudents();
@@ -177,15 +183,15 @@ public class ConsoleApp {
 
             Optional<CourseMetadata> meta = metaRepo.findMetadata(courseId);
 
-            System.out.print("Use mentor? (yes/no) [enter = default from metadata]: ");
+            System.out.print("Use mentor? (yes/no)");
             String mentorAns = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
             boolean useMentor = mentorAns.isEmpty() ? meta.map(CourseMetadata::hasMentor).orElse(false) : mentorAns.startsWith("y");
 
-            System.out.print("Use gamification? (yes/no) [enter = default from metadata]: ");
+            System.out.print("Use gamification? (yes/no)");
             String gamAns = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
             boolean useGamification = gamAns.isEmpty() ? meta.map(CourseMetadata::hasGamification).orElse(false) : gamAns.startsWith("y");
 
-            System.out.print("Use certificate? (yes/no) [enter = default from metadata]: ");
+            System.out.print("Use certificate? (yes/no)");
             String certAns = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
             boolean useCertificate = certAns.isEmpty() ? meta.map(CourseMetadata::hasCertificate).orElse(false) : certAns.startsWith("y");
 

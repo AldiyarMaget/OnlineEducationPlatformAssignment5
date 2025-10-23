@@ -3,6 +3,7 @@ package org.example.repository.impl;
 import org.example.domain.enrollment.Enrollment;
 import org.example.repository.EnrollmentRepository;
 
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
@@ -13,9 +14,21 @@ public class JdbcEnrollmentRepository implements EnrollmentRepository {
 
     @Override
     public boolean create(Enrollment e) {
-        String sql = "INSERT INTO enrollments(student_id, course_id, status, completed_modules, mentor_id, certificate_id, version, use_mentor, use_gamification, use_certificate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String nameQuery = "SELECT name FROM students WHERE id = ?";
+        String sql = "INSERT INTO enrollments(student_id, course_id, status, completed_modules, mentor_id, certificate_id, version, use_mentor, use_gamification, use_certificate, name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection c = ds.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+
+             PreparedStatement ps = c.prepareStatement(sql);
+             PreparedStatement cs = c.prepareStatement(nameQuery)) {
+            cs.setObject(1, e.getStudentId());
+            String studentName = null;
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    studentName = rs.getString("name");
+                } else {
+                    studentName = null;
+                }
+            }
             ps.setObject(1, e.getStudentId());
             ps.setString(2, e.getCourseId());
             ps.setString(3, e.getStatus());
@@ -26,6 +39,7 @@ public class JdbcEnrollmentRepository implements EnrollmentRepository {
             ps.setBoolean(8, e.isUseMentor());
             ps.setBoolean(9, e.isUseGamification());
             ps.setBoolean(10, e.isUseCertificate());
+            ps.setString(11, studentName);
             return ps.executeUpdate() == 1;
         } catch (SQLException ex) { throw new RuntimeException(ex); }
     }
